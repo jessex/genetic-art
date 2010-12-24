@@ -14,9 +14,9 @@ public class Polygon {
         //Create polygon by setting up random points around origin
         for (int i=0; i<Settings.minPolyPoints; i++) {
             int randx = origin.getX() + Randoms.randomInt(-3, 3);
-            randx = Math.min(Math.max(0, randx), Settings.maxWidth);
+            randx = Math.min(Math.max(0, randx), Settings.picWidth);
             int randy = origin.getY() + Randoms.randomInt(-3, 3);
-            randy = Math.min(Math.max(0, randy), Settings.maxHeight);
+            randy = Math.min(Math.max(0, randy), Settings.picHeight);
             this.points.add(new Point(randx, randy));
         }
     }

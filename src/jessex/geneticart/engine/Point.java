@@ -6,8 +6,8 @@ public class Point {
     private int y;
 
     public Point() {
-        this(Randoms.randomInt(Settings.maxWidth),
-                Randoms.randomInt(Settings.maxHeight));
+        this(Randoms.randomInt(Settings.picWidth),
+                Randoms.randomInt(Settings.picHeight));
     }
 
     public Point(int x, int y) {
@@ -25,17 +25,32 @@ public class Point {
 
     //MUTATION
     private void movePointMaxRange(Picture pic) {
-        this.x = Randoms.randomInt(Settings.maxWidth);
-        this.y = Randoms.randomInt(Settings.maxHeight);
+        this.x = Randoms.randomInt(Settings.picWidth);
+        this.y = Randoms.randomInt(Settings.picHeight);
+        pic.setModified(true);
+    }
+    private void movePointMidRange(Picture pic) {
+        this.x = Randoms.randomInt(Math.max(0,
+                this.x-Settings.pointMidIntensity), Math.min(this.x+
+                Settings.pointMidIntensity, Settings.picWidth));
+        this.y = Randoms.randomInt(Math.max(0,
+                this.y-Settings.pointMidIntensity), Math.min(this.y+
+                Settings.pointMidIntensity, Settings.picWidth));
+        pic.setModified(true);
+    }
+    private void movePointMinRange(Picture pic) {
+        this.x = Randoms.randomInt(Math.max(0,
+                this.x-Settings.pointMinIntensity), Math.min(this.x+
+                Settings.pointMinIntensity, Settings.picWidth));
+        this.y = Randoms.randomInt(Math.max(0,
+                this.y-Settings.pointMinIntensity), Math.min(this.y+
+                Settings.pointMinIntensity, Settings.picWidth));
+        pic.setModified(true);
     }
 
     public void mutatePoint(Picture pic) {
-        
+        if (Randoms.checkRatio(Settings.pointMaxRate)) movePointMaxRange(pic);
+        if (Randoms.checkRatio(Settings.pointMidRate)) movePointMidRange(pic);
+        if (Randoms.checkRatio(Settings.pointMinRate)) movePointMinRange(pic);
     }
-
-
-
-
-
-
 }
