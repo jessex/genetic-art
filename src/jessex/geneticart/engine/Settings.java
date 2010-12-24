@@ -4,6 +4,8 @@ public class Settings {
 
     public static int maxWidth = 200;
     public static int maxHeight = 200;
+    public static int picWidth, picHeight;
+
 
     //COMPONENT TOTAL RANGES
     public static int maxPolygons = 250;
@@ -17,8 +19,16 @@ public class Settings {
     public static double picAddRate = 0.05;
     public static double picDelRate = 0.05;
     public static double picMoveRate = 0.05;
+    
     public static double polyAddRate = 0.05;
     public static double polyDelRate = 0.05;
+
+    public static double pointMaxRate = 0.05;
+    public static double pointMidRate = 0.05;
+    public static int pointMidIntensity = 20;
+    public static double pointMinRate = 0.05;
+    public static int pointMinIntensity = 5;
+
     public static double colorAlphaRate = 0.05;
     public static int maxColorTransparency = 75;
     public static int minColorTransparency = 25;

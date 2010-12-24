@@ -1,12 +1,14 @@
 package jessex.geneticart.engine;
 
-import java.util.ArrayList;
-
 public class Genetics {
 
     public SourceImage source;              //Source picture to evolve
     public SourceImage evolved;             //"Work in progress" picture
-    ArrayList<Integer> fitnessVals;         //Fitness values by generation
+
+    public int prevFitness;                 //Fitness of previous generation
+    public int nextFitness;                 //Fitness of next generation
+    public Picture prevPic;                 //Previous generation Picture
+    public Picture nextPic;                 //Next generation Picture
 
     //Calculates the fitness of the evolved image with respect to the source
     //Fitness is a sum of the absolute differences between the color values of
