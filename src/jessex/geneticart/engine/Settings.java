@@ -13,7 +13,8 @@ public class Settings {
     public static int maxPicPoints = 1500;
     public static int minPicPoints = 0;
 
-    //MUTATION RATES
-    
+    //MUTATION RATES AND VALUES
+    public static int maxColorTransparency = 75;
+    public static int minColorTransparency = 25;
 
 }

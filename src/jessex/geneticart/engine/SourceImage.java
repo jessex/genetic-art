@@ -1,5 +1,6 @@
 package jessex.geneticart.engine;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,8 @@ public class SourceImage {
         return this.width;
     }
 
-    private int[][][] getPixelARGBs(BufferedImage image) {
+    //Examines image by pixel to determine the ARGB colors values of each pixel
+    public int[][][] getPixelARGBs(BufferedImage image) {
         int x = image.getWidth();
         int y = image.getHeight();
         int[][][] rgb = new int [x][y][4];
@@ -59,6 +61,9 @@ public class SourceImage {
         return rgb;
     }
 
+    //Separates the portions of the RGBA color space word to obtain our values
+    //Most common 32 bit pixel layout has alpha as the 8 highest bits, red as
+    //the next 8, green as the next 8 and blue as the 8 lowest bits
     private int[] getARGBFromPixel(int pixel) {
         int[] argb = new int[4];
         argb[0] = (pixel >> 24) & 0xff; //Alpha

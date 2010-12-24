@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 public class Polygon {
 
-    public ArrayList<Point> points;
-    public Paint color;
+    public ArrayList<Point> points;             //List of vertices in polygon
+    public Paint color;                         //RGBA color fill of polygon
 
     public Polygon() {
         this.points = new ArrayList<Point>();
-        
         //Set up a random location
         Point origin = new Point();
         //Create polygon by setting up random points around origin
