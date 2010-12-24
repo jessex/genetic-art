@@ -22,8 +22,8 @@ public class Polygon {
     }
 
 
-    //Point Mutators
-    public void addRandomMidPoint(Picture pic) {
+    //MUTATION
+    private void addRandomMidPoint(Picture pic) {
         if (this.points.size() < Settings.maxPolyPoints && pic.getPoints() <
                 Settings.maxPicPoints) {
             int index = Randoms.randomInt(1, this.points.size()-1);
@@ -35,14 +35,19 @@ public class Polygon {
             pic.setModified(true);
         }
     }
-    
-    public void removeRandomPoint(Picture pic) {
+    private void removeRandomPoint(Picture pic) {
         if (this.points.size() > Settings.minPolyPoints && pic.getPoints() >
                 Settings.minPicPoints) {
             this.points.remove(Randoms.randomInt(this.points.size()-1));
             pic.setModified(true);
         }
     }
+    
+    public void mutatePolygon(Picture pic) {
+        if (Randoms.checkRatio(Settings.polyAddRate)) addRandomMidPoint(pic);
+        if (Randoms.checkRatio(Settings.polyDelRate)) removeRandomPoint(pic);
 
-
+        color.mutateColor(pic); //Mutate color
+        for (Point p : points) p.mutatePoint(pic); //Mutate points in polygon
+    }
 }

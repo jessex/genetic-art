@@ -19,8 +19,8 @@ public class Randoms {
         return random.nextFloat();
     }
 
-    public static boolean checkRatio(float rate) {
-        return random.nextFloat() < rate;
+    public static boolean checkRatio(double rate) {
+        return random.nextDouble() < rate;
     }
 
 }

@@ -15,9 +15,9 @@ public class Illustrator {
             int n = p.points.size();
             int[] x = new int[n];
             int[] y = new int[n];
-            for (int j=0; j<p.points.size(); j++) {
-                x[i] = p.points.get(j).getX();
-                y[i] = p.points.get(j).getY();
+            for (Point c : p.points) {
+                x[i] = c.getX();
+                y[i] = c.getY();
             }
             Paint c = p.color;
             g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(),

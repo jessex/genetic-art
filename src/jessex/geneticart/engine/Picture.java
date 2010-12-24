@@ -25,42 +25,40 @@ public class Picture {
     }
 
     //ACCESSORS
-    public int getPoints() {
-        return this.points;
-    }
-    public boolean isModified() {
-        return this.modified;
-    }
+    public int getPoints() { return this.points; }
+    public boolean isModified() { return this.modified; }
 
-    //MUTATORS
-    public void setPoints(int points) {
-        this.points = points;
-    }
-    public void setModified(boolean b) {
-        this.modified = b;
-    }
+    //SETTERS
+    public void setPoints(int points) { this.points = points; }
+    public void setModified(boolean b) { this.modified = b; }
 
-    //Polygon Mutations
-    public void removeRandomPolygon() {
+    //MUTATION
+    private void removeRandomPolygon() {
         if (polygons.size() > Settings.minPolygons) {
             polygons.remove(Randoms.randomInt(polygons.size()-1));
             this.modified = true;
         }
     }
-
-    public void addRandomPolygon() {
+    private void addRandomPolygon() {
         if (polygons.size() < Settings.maxPolygons) {
             polygons.add(Randoms.randomInt(polygons.size()-1), new Polygon());
             this.modified = true;
         }
     }
-
-    public void moveRandomPolygon() {
+    private void moveRandomPolygon() {
         if (polygons.size() > 0) {
             Polygon poly = polygons.remove(Randoms.randomInt(polygons.size()-1));
             polygons.add(Randoms.randomInt(polygons.size()-1), poly);
             this.modified = true;
         }
+    }
+
+    public void mutatePicture() {
+        if (Randoms.checkRatio(Settings.picAddRate)) addRandomPolygon();
+        if (Randoms.checkRatio(Settings.picDelRate)) removeRandomPolygon();
+        if (Randoms.checkRatio(Settings.picMoveRate)) moveRandomPolygon();
+
+        for (Polygon poly : polygons) poly.mutatePolygon(this);
     }
 
 
