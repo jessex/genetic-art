@@ -23,9 +23,9 @@ public class Polygon {
 
 
     //MUTATION
+    //Mutation is to add a random point to the polygon between two other points
     private void addRandomMidPoint(Picture pic) {
-        if (this.points.size() < Settings.maxPolyPoints && pic.getPoints() <
-                Settings.maxPicPoints) {
+        if (this.points.size() < Settings.maxPolyPoints) {
             int index = Randoms.randomInt(1, this.points.size()-1);
             int avgx = (this.points.get(index-1).getX() +
                     this.points.get(index).getX()) / 2;
@@ -35,14 +35,14 @@ public class Polygon {
             pic.setModified(true);
         }
     }
+    //Mutation is to delete a random point in the polygon
     private void removeRandomPoint(Picture pic) {
-        if (this.points.size() > Settings.minPolyPoints && pic.getPoints() >
-                Settings.minPicPoints) {
+        if (this.points.size() > Settings.minPolyPoints) {
             this.points.remove(Randoms.randomInt(this.points.size()-1));
             pic.setModified(true);
         }
     }
-    
+    //Performs polygon-level and color mutations then passes off to points
     public void mutatePolygon(Picture pic) {
         if (Randoms.checkRatio(Settings.polyAddRate)) addRandomMidPoint(pic);
         if (Randoms.checkRatio(Settings.polyDelRate)) removeRandomPoint(pic);

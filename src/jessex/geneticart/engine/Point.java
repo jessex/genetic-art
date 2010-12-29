@@ -24,11 +24,13 @@ public class Point {
     public void setY(int y) { this.y = y; }
 
     //MUTATION
+    //Mutation is to randomly move the point to anywhere else in the picture
     private void movePointMaxRange(Picture pic) {
         this.x = Randoms.randomInt(Settings.picWidth);
         this.y = Randoms.randomInt(Settings.picHeight);
         pic.setModified(true);
     }
+    //Mutation is to randomly move the point within a moderate range
     private void movePointMidRange(Picture pic) {
         this.x = Randoms.randomInt(Math.max(0,
                 this.x-Settings.pointMidIntensity), Math.min(this.x+
@@ -38,6 +40,7 @@ public class Point {
                 Settings.pointMidIntensity, Settings.picWidth));
         pic.setModified(true);
     }
+    //Mutation is to randomly move the point within a minimal range
     private void movePointMinRange(Picture pic) {
         this.x = Randoms.randomInt(Math.max(0,
                 this.x-Settings.pointMinIntensity), Math.min(this.x+
@@ -47,7 +50,7 @@ public class Point {
                 Settings.pointMinIntensity, Settings.picWidth));
         pic.setModified(true);
     }
-
+    //Performs possible point-level (location) mutations
     public void mutatePoint(Picture pic) {
         if (Randoms.checkRatio(Settings.pointMaxRate)) movePointMaxRange(pic);
         if (Randoms.checkRatio(Settings.pointMidRate)) movePointMidRange(pic);

@@ -18,7 +18,7 @@ public class SourceImage {
                 BufferedImage.TYPE_INT_ARGB);
         this.height = height;
         this.width = width;
-        pixels = new int[width][height][4];
+        this.pixels = new int[width][height][4];
     }
 
     //Creates a buffer of the image found at filename

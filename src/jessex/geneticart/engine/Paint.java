@@ -2,7 +2,7 @@ package jessex.geneticart.engine;
 
 public class Paint {
 
-    private int alpha, red, green, blue;
+    private int alpha, red, green, blue;        //ARGB values as integers
 
     //Constructs a random Paint RGBA color
     public Paint() {
@@ -32,30 +32,30 @@ public class Paint {
     public void setBlue(int b) { this.blue = b; }
 
     //MUTATION
+    //Mutation is to randomly mutate color values within some specified range
     public void mutateColor(Picture pic) {
         if (Randoms.checkRatio(Settings.colorAlphaRate)) {
             this.alpha = Randoms.randomInt(Settings.minColorTransparency,
                     Settings.maxColorTransparency);
             pic.setModified(true);
         }
-        if (Randoms.checkRatio(Settings.colorRedRate)) {
+        if (Randoms.checkRatio(Settings.colorRate)) {
             this.red = Randoms.randomInt(Math.max(0,this.red-
                     Settings.colorIntensity), Math.min(this.red+
                     Settings.colorIntensity,255));
             pic.setModified(true);
         }
-        if (Randoms.checkRatio(Settings.colorGreenRate)) {
+        if (Randoms.checkRatio(Settings.colorRate)) {
             this.green = Randoms.randomInt(Math.max(0,this.green-
                     Settings.colorIntensity), Math.min(this.green+
                     Settings.colorIntensity,255));
             pic.setModified(true);
         }
-        if (Randoms.checkRatio(Settings.colorBlueRate)) {
+        if (Randoms.checkRatio(Settings.colorRate)) {
             this.blue = Randoms.randomInt(Math.max(0,this.blue-
                     Settings.colorIntensity), Math.min(this.blue+
                     Settings.colorIntensity,255));
             pic.setModified(true);
         }
     }
-
 }
