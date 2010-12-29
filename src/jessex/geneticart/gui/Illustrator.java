@@ -6,6 +6,8 @@ import jessex.geneticart.engine.*;
 
 public class Illustrator {
 
+    //Draws the polygons of the passed picture onto a blank image and returns
+    //the picture as a Graphics2D object which can be drawn onto a canvas
     public static Graphics2D getGraphics(Picture pic, int width, int height) {
         SourceImage img = new SourceImage(width, height);
         Graphics2D g = img.image.createGraphics();
