@@ -10,22 +10,24 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import jessex.geneticart.engine.Settings;
 
 public class MainGui extends JFrame implements ActionListener {
 
     DisplayGui ac;
 
-    JPanel settings;
-    JButton start, quit, load;
+    JPanel settings, control;
+    JButton reset, quit, load;
     DoubleJSlider picAdd, picDel, picMove, polyAdd, polyDel;
     DoubleJSlider vertMax, vertMid, vertMin;
-    DoubleJSlider colorRate, colorInt, alphaRate, alphaInt;
-    JLabel pa, pd, pm, poA, poD, vMa, vMi, vMn, cR, cI, aR, aI;
+    DoubleJSlider colorRate, alphaRate;
+    JSlider maxPoly, maxVert, minPoly, minVert, colorInt, alphaInt;
+    JLabel pa, pd, pm, poA, poD, vMa, vMi, vMn, cR, cI, aR, aI, mP, mV, iP, iV;
     JRadioButton def, cus;
     ButtonGroup set;
 
     boolean isRunning;
-    private final Dimension FRAMEDIMENSION = new Dimension(450,400);
+    private final Dimension FRAMEDIMENSION = new Dimension(450,560);
     private final Dimension BUTTONDIMENSION = 
             new Dimension ((FRAMEDIMENSION.width-30)/3,40);
     private final Dimension SLIDERDIMENSION =
@@ -56,7 +58,7 @@ public class MainGui extends JFrame implements ActionListener {
         settings.setBorder(new TitledBorder("Mutation Rates and Settings"));
         settings.setLayout(new GridBagLayout());
         settings.setPreferredSize(new Dimension(FRAMEDIMENSION.width,
-                FRAMEDIMENSION.height-50));
+                FRAMEDIMENSION.height-150));
         GridBagConstraints p = new GridBagConstraints();
 
         /* ********************************************************************
@@ -127,72 +129,72 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,5);
         settings.add(picMove, p);
 
+        // *************************** SECOND ROW ******************************
 
-        // **************************** SECOND ROW *****************************
-
-        poA = new JLabel("Vertex Addition:");
-        poA.setFont(LABELFONT);
-        poA.setHorizontalAlignment(SwingConstants.LEFT);
+        vMa = new JLabel("Vertex Max Move:");
+        vMa.setFont(LABELFONT);
+        vMa.setHorizontalAlignment(SwingConstants.LEFT);
         p.gridx = 0;
         p.gridy = 2;
         p.insets = new Insets(5,5,0,10);
-        settings.add(poA, p);
-
-        poD = new JLabel("Vertex Deletion:");
-        poD.setFont(LABELFONT);
-        poD.setHorizontalAlignment(SwingConstants.LEFT);
-        p.gridx = 1;
-        p.insets = new Insets(5,0,0,10);
-        settings.add(poD, p);
-
-        vMa = new JLabel("Vertex Min Move:");
-        vMa.setFont(LABELFONT);
-        vMa.setHorizontalAlignment(SwingConstants.LEFT);
-        p.gridx = 2;
-        p.insets = new Insets(5,0,0,5);
         settings.add(vMa, p);
 
-        polyAdd = new DoubleJSlider(0,100,0,1000);
-        polyAdd.setPreferredSize(SLIDERDIMENSION);
-        polyAdd.addChangeListener(new ChangeListener(){
+        vMi = new JLabel("Vertex Mid Move:");
+        vMi.setFont(LABELFONT);
+        vMi.setHorizontalAlignment(SwingConstants.LEFT);
+        p.gridx = 1;
+        p.insets = new Insets(5,0,0,10);
+        settings.add(vMi, p);
+
+        vMn = new JLabel("Vertex Min Move:");
+        vMn.setFont(LABELFONT);
+        vMn.setHorizontalAlignment(SwingConstants.LEFT);
+        p.gridx = 2;
+        p.insets = new Insets(5,0,0,5);
+        settings.add(vMn, p);
+
+        vertMax = new DoubleJSlider(0,100,0,1000);
+        vertMax.setPreferredSize(SLIDERDIMENSION);
+        vertMax.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                poA.setText("Vertex Addition: " + DF.format(polyAdd.getScaledValue()));
+                vMa.setText("Vertex Max Move: " + DF.format(vertMax.getScaledValue()));
             }
         });
-        poA.setText("Vertex Addition: " + DF.format(polyAdd.getScaledValue()));
+        vMa.setText("Vertex Max Move: " + DF.format(vertMax.getScaledValue()));
         p.gridx = 0;
         p.gridy = 3;
         p.insets = new Insets(5,5,0,10);
-        settings.add(polyAdd, p);
+        settings.add(vertMax, p);
 
-        polyDel = new DoubleJSlider(0,100,0,1000);
-        polyDel.setPreferredSize(SLIDERDIMENSION);
-        polyDel.addChangeListener(new ChangeListener(){
+        vertMid = new DoubleJSlider(0,100,0,1000);
+        vertMid.setPreferredSize(SLIDERDIMENSION);
+        vertMid.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                poD.setText("Vertex Deletion: " + DF.format(polyDel.getScaledValue()));
+                vMi.setText("Vertex Mid Move: " + DF.format(vertMid.getScaledValue()));
             }
         });
-        poD.setText("Vertex Deletion: " + DF.format(polyDel.getScaledValue()));
+        vMi.setText("Vertex Mid Move: " + DF.format(vertMid.getScaledValue()));
         p.gridx = 1;
         p.insets = new Insets(5,0,0,10);
-        settings.add(polyDel, p);
+        settings.add(vertMid, p);
 
         vertMin = new DoubleJSlider(0,100,0,1000);
         vertMin.setPreferredSize(SLIDERDIMENSION);
         vertMin.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                vMa.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
+                vMn.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
             }
         });
-        vMa.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
+        vMn.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
         p.gridx = 2;
         p.insets = new Insets(5,0,0,5);
         settings.add(vertMin, p);
 
-        // **************************** THIRD ROW ******************************
+
+        // **************************** THIRD ROW *****************************
 
         poA = new JLabel("Vertex Addition:");
         poA.setFont(LABELFONT);
@@ -209,13 +211,6 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,10);
         settings.add(poD, p);
 
-        vMa = new JLabel("Vertex Min Move:");
-        vMa.setFont(LABELFONT);
-        vMa.setHorizontalAlignment(SwingConstants.LEFT);
-        p.gridx = 2;
-        p.insets = new Insets(5,0,0,5);
-        settings.add(vMa, p);
-
         polyAdd = new DoubleJSlider(0,100,0,1000);
         polyAdd.setPreferredSize(SLIDERDIMENSION);
         polyAdd.addChangeListener(new ChangeListener(){
@@ -226,7 +221,7 @@ public class MainGui extends JFrame implements ActionListener {
         });
         poA.setText("Vertex Addition: " + DF.format(polyAdd.getScaledValue()));
         p.gridx = 0;
-        p.gridy = 3;
+        p.gridy = 5;
         p.insets = new Insets(5,5,0,10);
         settings.add(polyAdd, p);
 
@@ -243,18 +238,53 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,10);
         settings.add(polyDel, p);
 
-        vertMin = new DoubleJSlider(0,100,0,1000);
-        vertMin.setPreferredSize(SLIDERDIMENSION);
-        vertMin.addChangeListener(new ChangeListener(){
+        // *************************** FOURTH ROW ******************************
+
+        cR = new JLabel("Color Rate:");
+        cR.setFont(LABELFONT);
+        cR.setHorizontalAlignment(SwingConstants.LEFT);
+        p.gridx = 0;
+        p.gridy = 6;
+        p.insets = new Insets(5,5,0,10);
+        settings.add(cR, p);
+
+        cI = new JLabel("Color Intensity:");
+        cI.setFont(LABELFONT);
+        cI.setHorizontalAlignment(SwingConstants.LEFT);
+        p.gridx = 1;
+        p.insets = new Insets(5,0,0,10);
+        settings.add(cI, p);
+
+        colorRate = new DoubleJSlider(0,100,0,1000);
+        colorRate.setPreferredSize(SLIDERDIMENSION);
+        colorRate.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                vMa.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
+                cR.setText("Color Rate: " + DF.format(colorRate.getScaledValue()));
             }
         });
-        vMa.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
-        p.gridx = 2;
-        p.insets = new Insets(5,0,0,5);
-        settings.add(vertMin, p);
+        cR.setText("Color Rate: " + DF.format(colorRate.getScaledValue()));
+        p.gridx = 0;
+        p.gridy = 7;
+        p.insets = new Insets(5,5,0,10);
+        settings.add(colorRate, p);
+
+        colorInt = new JSlider(JSlider.HORIZONTAL, 10, 255, Settings.colorIntensity);
+        colorInt.setPreferredSize(SLIDERDIMENSION);
+        colorInt.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                cI.setText("Color Intensity: " + colorInt.getValue());
+            }
+        });
+        cI.setText("Color Intensity: " + colorInt.getValue());
+        p.gridx = 1;
+        p.insets = new Insets(5,0,0,10);
+        settings.add(colorInt, p);
+
+        
+
+        
 
 
 
@@ -268,15 +298,126 @@ public class MainGui extends JFrame implements ActionListener {
         g.insets = new Insets(5,5,10,5); //Insets - top left bottom right
         add(settings, g);
 
-        start = new JButton("Start"); //START BUTTON
-        start.setPreferredSize(BUTTONDIMENSION);
-        start.setFont(BUTTONFONT);
-        start.setForeground(Color.BLUE);
-        start.addActionListener(this);
+        control = new JPanel(); //SETTINGS PANEL
+        control.setBorder(new TitledBorder("Control"));
+        control.setLayout(new GridBagLayout());
+        control.setPreferredSize(new Dimension(FRAMEDIMENSION.width,
+                150));
+        GridBagConstraints c = new GridBagConstraints();
+
+        /* ********************************************************************
+         * ***************** START OF CONTROL PANEL COMPONENTS ****************
+         * ********************************************************************
+         */
+
+        iP = new JLabel("Min Polygons:");
+        iP.setFont(LABELFONT);
+        iP.setHorizontalAlignment(SwingConstants.LEFT);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(5,10,0,10);
+        control.add(iP, c);
+
+        mP = new JLabel("Max Polygons:");
+        mP.setFont(LABELFONT);
+        mP.setHorizontalAlignment(SwingConstants.LEFT);
+        c.gridx = 1;
+        c.insets = new Insets(5,0,0,10);
+        control.add(mP, c);
+
+        minPoly = new JSlider(JSlider.HORIZONTAL, Settings.MINPOLMIN,
+                Settings.MINPOLMAX, Settings.minPolygons);
+        minPoly.setPreferredSize(SLIDERDIMENSION);
+        minPoly.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                iP.setText("Min Polygons: " + minPoly.getValue());
+            }
+        });
+        iP.setText("Min Polygons: " + minPoly.getValue());
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(5,10,0,10);
+        control.add(minPoly, c);
+
+        maxPoly = new JSlider(JSlider.HORIZONTAL, Settings.MAXPOLMIN,
+                Settings.MAXPOLMAX, Settings.maxPolygons);
+        maxPoly.setPreferredSize(SLIDERDIMENSION);
+        maxPoly.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                mP.setText("Max Polygons: " + maxPoly.getValue());
+            }
+        });
+        mP.setText("Max Polygons: " + maxPoly.getValue());
+        c.gridx = 1;
+        c.insets = new Insets(5,0,0,10);
+        control.add(maxPoly, c);
+
+        iV = new JLabel("Min Vertices:");
+        iV.setFont(LABELFONT);
+        iV.setHorizontalAlignment(SwingConstants.LEFT);
+        c.gridx = 0;
+        c.gridy = 2;
+        c.insets = new Insets(5,10,0,10);
+        control.add(iV, c);
+
+        mV = new JLabel("Max Vertices:");
+        mV.setFont(LABELFONT);
+        mV.setHorizontalAlignment(SwingConstants.LEFT);
+        c.gridx = 1;
+        c.insets = new Insets(5,0,0,10);
+        control.add(mV, c);
+
+        minVert = new JSlider(JSlider.HORIZONTAL, Settings.MINPIMIN,
+                Settings.MINPIMAX, Settings.minPolyPoints);
+        minVert.setPreferredSize(SLIDERDIMENSION);
+        minVert.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                iV.setText("Min Vertices: " + minVert.getValue());
+            }
+        });
+        iV.setText("Min Vertices: " + minVert.getValue());
+        c.gridx = 0;
+        c.gridy = 3;
+        c.insets = new Insets(5,10,0,10);
+        control.add(minVert, c);
+
+        maxVert = new JSlider(JSlider.HORIZONTAL, Settings.MAXPIMIN,
+                Settings.MAXPIMAX, Settings.maxPolyPoints);
+        maxVert.setPreferredSize(SLIDERDIMENSION);
+        maxVert.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                mV.setText("Max Vertices: " + maxVert.getValue());
+            }
+        });
+        mV.setText("Max Vertices: " + maxVert.getValue());
+        c.gridx = 1;
+        c.insets = new Insets(5,0,0,10);
+        control.add(maxVert, c);
+
+
+        /* ********************************************************************
+         * ***************** END OF CONTROL PANEL COMPONENTS ******************
+         * ********************************************************************
+         */
+
         g.gridy = 1;
+        g.gridwidth = 3;
+        g.insets = new Insets(0,5,10,5);
+        add(control, g);
+
+        reset = new JButton("Reset"); //RESET BUTTON
+        reset.setPreferredSize(BUTTONDIMENSION);
+        reset.setFont(BUTTONFONT);
+        reset.setForeground(Color.BLUE);
+        reset.addActionListener(this);
+        g.gridy = 2;
         g.gridwidth = 1;
         g.insets = new Insets(0,5,5,10);
-        add(start, g);
+        add(reset, g);
 
         load = new JButton("Load"); //LOAD BUTTON
         load.setPreferredSize(BUTTONDIMENSION);
@@ -328,19 +469,24 @@ public class MainGui extends JFrame implements ActionListener {
         }
 
         public double getScaledValue() {
-            return ((double)super.getValue()) / this.scale;
+            return ((double) super.getValue()) / this.scale;
         }
+
+        public void setScaledValue(double value) {
+            super.setValue((int) (value * this.scale));
+        }
+
     }
 
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == start) { //CLICKED START
+        if (e.getSource() == reset) { //CLICKED RESET
+            
+        }
+        else if (e.getSource() == load) { //CLICKED LOAD
 
         }
-        else if (e.getSource() == load) {
-
-        }
-        else if (e.getSource() == quit) {
+        else if (e.getSource() == quit) { //CLICKED QUIT
             System.exit(0);
         }
     }

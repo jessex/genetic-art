@@ -8,9 +8,20 @@ public class Settings {
 
 
     //COMPONENT TOTAL RANGES
-    public static int maxPolygons = 250;
-    public static int minPolygons = 0;
+    public static final int MAXPOLMIN = 25;
+    public static final int MAXPOLMAX = 250;
+    public static int maxPolygons = 100;
+
+    public static final int MINPOLMIN = 1;
+    public static final int MINPOLMAX = 15;
+    public static int minPolygons = 5;
+
+    public static final int MAXPIMIN = 5;
+    public static final int MAXPIMAX = 15;
     public static int maxPolyPoints = 10;
+
+    public static final int MINPIMIN = 3;
+    public static final int MINPIMAX = 7;
     public static int minPolyPoints = 3;
 
     //MUTATION RATES AND VALUES
