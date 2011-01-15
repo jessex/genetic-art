@@ -14,9 +14,11 @@ public class Genetics {
     public Picture prevPic;                 //Previous generation Picture
     public Picture currPic;                 //Current generation Picture
 
-    //Calculates the fitness of the evolved image with respect to the source
-    //Fitness is a sum of the absolute differences between the color values of
-    //each pixel pair in the images (Alpha, Red, Blue, Green)
+    /*
+     * Calculates the fitness of the evolved image with respect to the source
+     * Fitness is a sum of the absolute differences between the color values of
+     * each pixel pair in the images (Alpha, Red, Blue, Green)
+     */
     public int getFitness() {
         int fitness = 0;
         //Iterate through each column reading ARGB values of the pixels
@@ -33,10 +35,12 @@ public class Genetics {
         return fitness;
     }
 
-    //Extracts the pixels of the most recently drawn image from the canvas
-    //and compares its fitness to the previous image to determine which image
-    //to move forward with at the next generation, either current or previous
-    //Then mutates its choice and draws the new image (if necessary)
+    /*
+     * Extracts the pixels of the most recently drawn image from the canvas
+     * and compares its fitness to the previous image to determine which image
+     * to move forward with at the next generation, either current or previous
+     * Then mutates its choice and draws the new image (if necessary)
+     */
     public boolean evolveCycle(JPanel panel) {
         boolean improved;
 
