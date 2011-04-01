@@ -539,8 +539,8 @@ public class MainGui extends JFrame implements ActionListener {
             SourceImage s = null;
             boolean loaded = false;
             if (result == JFileChooser.APPROVE_OPTION) {
-                s = new SourceImage(jc.getSelectedFile().getName());
-                loaded = true;
+                s = new SourceImage(jc.getSelectedFile().getAbsolutePath());
+                if (s.valid) loaded = true;
             }
 
             if (loaded)
