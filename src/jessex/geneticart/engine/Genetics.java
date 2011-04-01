@@ -1,8 +1,6 @@
 package jessex.geneticart.engine;
 
 import java.awt.image.BufferedImage;
-import javax.swing.JPanel;
-import jessex.geneticart.gui.Illustrator;
 
 public class Genetics {
 
@@ -15,7 +13,7 @@ public class Genetics {
     public Picture currPic;                 //Current generation Picture
 
     public Genetics(SourceImage s) {
-        prevFitness = currFitness = 0;
+        prevFitness = currFitness = Integer.MAX_VALUE;
         source = s;
         evolved = new SourceImage(s.getWidth(), s.getHeight());
         prevPic = currPic = new Picture();
@@ -48,38 +46,36 @@ public class Genetics {
      * to move forward with at the next generation, either current or previous
      * Then mutates its choice and draws the new image (if necessary)
      */
-    public boolean evolveCycle(JPanel panel) {
+    public boolean evolveCycle(jessex.geneticart.gui.DisplayGui.ImagePanel panel) {
         boolean improved;
 
         //Extract pixels from canvas and place in SourceImage (this.evolved)
-        BufferedImage bi = (BufferedImage) panel.createImage(Settings.picWidth,
-                Settings.picHeight);
+        BufferedImage bi = (BufferedImage) panel.createImage(Settings.maxWidth,
+                Settings.maxHeight);
         evolved.image = bi;
         evolved.pixels = evolved.getPixelARGBs(bi);
+        
+        Picture temp = prevPic;
+        prevPic = currPic;
+        currPic.setModified(false);
+        currPic.mutatePicture();
 
         //Compare fitness of new image to that of last image
+        int tempFit = prevFitness;
         prevFitness = currFitness;
         currFitness = getFitness();
-        if (currFitness > prevFitness) { //Improvement from previous generation
-            Picture temp = currPic;
-            prevPic = temp;
-            currPic.setModified(false); //Reset modified status
-            currPic.mutatePicture();
+        System.out.println(prevFitness);
+        System.out.println(currFitness);
+        if (currFitness < prevFitness) { //Improvement from previous generation
             improved = true;
         }
         else { //No improvement from previous generation
             currPic = prevPic;
+            prevPic = temp;
             currFitness = prevFitness; //Reset fitness level to previous
-            currPic.setModified(false); //Reset modified status
+            prevFitness = tempFit;
             currPic.mutatePicture();
             improved = false;
-        }
-        
-        //Take current Picture and paint to canvas via Illustrator
-        if (currPic.isModified()) {
-            //Draw if modified from previous
-            panel.paint(Illustrator.getGraphics(currPic,
-                    Settings.picWidth, Settings.picHeight));
         }
 
         return improved; //Return true if improvement from previous cycle
