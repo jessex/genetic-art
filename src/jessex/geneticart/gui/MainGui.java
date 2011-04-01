@@ -3,18 +3,26 @@ package jessex.geneticart.gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jessex.geneticart.engine.Settings;
+import jessex.geneticart.engine.SourceImage;
 
 public class MainGui extends JFrame implements ActionListener {
 
     DisplayGui ac;
+    final JFileChooser jc = new JFileChooser();
 
     JPanel settings, control;
     JButton reset, quit, load, export, imports;
@@ -92,13 +100,15 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,5);
         settings.add(pm, p);
 
-        picAdd = new DoubleJSlider(0,100,0,1000);
+        picAdd = new DoubleJSlider(0,100,(int)(Settings.picAddRate*1000),1000);
         picAdd.setToolTipText("Rate of polygon addition");
         picAdd.setPreferredSize(SLIDERDIMENSION);
         picAdd.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                pa.setText("Polygon Addition: " + DF.format(picAdd.getScaledValue()));
+                double d = picAdd.getScaledValue();
+                pa.setText("Polygon Addition: " + DF.format(d));
+                Settings.picAddRate = d;
             }
         });
         pa.setText("Polygon Addition: " + DF.format(picAdd.getScaledValue()));
@@ -107,13 +117,15 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,5,0,10);
         settings.add(picAdd, p);
 
-        picDel = new DoubleJSlider(0,100,0,1000);
+        picDel = new DoubleJSlider(0,100,(int)(Settings.picDelRate*1000),1000);
         picDel.setToolTipText("Rate of polygon deletion");
         picDel.setPreferredSize(SLIDERDIMENSION);
         picDel.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                pd.setText("Polygon Deletion: " + DF.format(picDel.getScaledValue()));
+                double d = picDel.getScaledValue();
+                pd.setText("Polygon Deletion: " + DF.format(d));
+                Settings.picDelRate = d;
             }
         });
         pd.setText("Polygon Deletion: " + DF.format(picDel.getScaledValue()));
@@ -121,13 +133,15 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,10);
         settings.add(picDel, p);
 
-        picMove = new DoubleJSlider(0,100,0,1000);
+        picMove = new DoubleJSlider(0,100,(int)(Settings.picMoveRate*1000),1000);
         picMove.setToolTipText("Rate of polygon movement between layers");
         picMove.setPreferredSize(SLIDERDIMENSION);
         picMove.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                pm.setText("Polygon Movement: " + DF.format(picMove.getScaledValue()));
+                double d = picMove.getScaledValue();
+                pm.setText("Polygon Movement: " + DF.format(d));
+                Settings.picMoveRate = d;
             }
         });
         pm.setText("Polygon Movement: " + DF.format(picMove.getScaledValue()));
@@ -159,13 +173,16 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,5);
         settings.add(vMn, p);
 
-        vertMax = new DoubleJSlider(0,100,0,1000);
+        vertMax = new DoubleJSlider(0,100,(int)(Settings.pointMaxRate*1000),1000);
         vertMax.setToolTipText("Rate of maximal vertex movement");
         vertMax.setPreferredSize(SLIDERDIMENSION);
         vertMax.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                vMa.setText("Vertex Max Move: " + DF.format(vertMax.getScaledValue()));
+                double d = vertMax.getScaledValue();
+                vMa.setText("Vertex Max Move: " + DF.format(d));
+                Settings.pointMaxRate = d;
+
             }
         });
         vMa.setText("Vertex Max Move: " + DF.format(vertMax.getScaledValue()));
@@ -174,13 +191,15 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,5,0,10);
         settings.add(vertMax, p);
 
-        vertMid = new DoubleJSlider(0,100,0,1000);
+        vertMid = new DoubleJSlider(0,100,(int)(Settings.pointMidRate*1000),1000);
         vertMid.setToolTipText("Rate of medium vertex movement");
         vertMid.setPreferredSize(SLIDERDIMENSION);
         vertMid.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                vMi.setText("Vertex Mid Move: " + DF.format(vertMid.getScaledValue()));
+                double d = vertMid.getScaledValue();
+                vMi.setText("Vertex Mid Move: " + DF.format(d));
+                Settings.pointMidRate = d;
             }
         });
         vMi.setText("Vertex Mid Move: " + DF.format(vertMid.getScaledValue()));
@@ -188,13 +207,15 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,10);
         settings.add(vertMid, p);
 
-        vertMin = new DoubleJSlider(0,100,0,1000);
+        vertMin = new DoubleJSlider(0,100,(int)(Settings.pointMinRate*1000),1000);
         vertMin.setToolTipText("Rate of minimal vertex movement");
         vertMin.setPreferredSize(SLIDERDIMENSION);
         vertMin.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                vMn.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
+                double d = vertMin.getScaledValue();
+                vMn.setText("Vertex Min Move: " + DF.format(d));
+                Settings.pointMinRate = d;
             }
         });
         vMn.setText("Vertex Min Move: " + DF.format(vertMin.getScaledValue()));
@@ -220,13 +241,15 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,0,0,10);
         settings.add(poD, p);
 
-        polyAdd = new DoubleJSlider(0,100,0,1000);
+        polyAdd = new DoubleJSlider(0,100,(int)(Settings.polyAddRate*1000),1000);
         polyAdd.setToolTipText("Rate of vertex addition");
         polyAdd.setPreferredSize(SLIDERDIMENSION);
         polyAdd.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                poA.setText("Vertex Addition: " + DF.format(polyAdd.getScaledValue()));
+                double d = polyAdd.getScaledValue();
+                poA.setText("Vertex Addition: " + DF.format(d));
+                Settings.polyAddRate = d;
             }
         });
         poA.setText("Vertex Addition: " + DF.format(polyAdd.getScaledValue()));
@@ -235,13 +258,15 @@ public class MainGui extends JFrame implements ActionListener {
         p.insets = new Insets(5,5,0,10);
         settings.add(polyAdd, p);
 
-        polyDel = new DoubleJSlider(0,100,0,1000);
+        polyDel = new DoubleJSlider(0,100,(int)(Settings.polyDelRate*1000),1000);
         polyDel.setToolTipText("Rate of vertex deletion");
         polyDel.setPreferredSize(SLIDERDIMENSION);
         polyDel.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                poD.setText("Vertex Deletion: " + DF.format(polyDel.getScaledValue()));
+                double d = polyDel.getScaledValue();
+                poD.setText("Vertex Deletion: " + DF.format(d));
+                Settings.polyDelRate = d;
             }
         });
         poD.setText("Vertex Deletion: " + DF.format(polyDel.getScaledValue()));
@@ -510,7 +535,17 @@ public class MainGui extends JFrame implements ActionListener {
             
         }
         else if (e.getSource() == load) { //CLICKED LOAD
-            ac = new DisplayGui();
+            int result = jc.showOpenDialog(this);
+            SourceImage s = null;
+            boolean loaded = false;
+            if (result == JFileChooser.APPROVE_OPTION) {
+                s = new SourceImage(jc.getSelectedFile().getName());
+                loaded = true;
+            }
+
+            if (loaded)
+                ac = new DisplayGui(s);
+            
         }
         else if (e.getSource() == quit) { //CLICKED QUIT
             System.exit(0);
