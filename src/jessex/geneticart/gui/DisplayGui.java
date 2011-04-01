@@ -3,15 +3,20 @@ package jessex.geneticart.gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.border.SoftBevelBorder;
+import jessex.geneticart.engine.*;
 
 public class DisplayGui extends JFrame implements ActionListener {
 
-    JPanel source, evolved;             //Panels to hold source, evolved images
+    Genetics genetics;
+
+    SourcePanel source;     //Panel to hold source image
+    ImagePanel evolved;     //Panel to hold evolved image
     JLabel lblSource, lblEvolved, elapsed, gen, improv, fitness;
     JButton start;
 
@@ -26,18 +31,19 @@ public class DisplayGui extends JFrame implements ActionListener {
     TimerTask countdown;
     int seconds, minutes;
 
-    public DisplayGui() {
+    public DisplayGui(SourceImage s) {
         super("Image Evolution");
         isRunning = false;
         DF.setDecimalSeparatorAlwaysShown(true);
 
-        createGui();
+        createGui(s);
         seconds = minutes = 0;
         hasStarted = false;
+        genetics = new Genetics(s);
     }
 
     @SuppressWarnings("static-access")
-    public void createGui() {
+    public void createGui(SourceImage s) {
         setSize(FRAMEDIMENSION);
         setMinimumSize(FRAMEDIMENSION);
         setLocation(400,400);
@@ -58,7 +64,7 @@ public class DisplayGui extends JFrame implements ActionListener {
         g.insets = new Insets(5,0,0,0);
         add(lblEvolved, g);
 
-        source = new JPanel(); //SETTINGS PANEL
+        source = new SourcePanel(s.image); //SETTINGS PANEL
         source.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
         source.setPreferredSize(new Dimension(200,200));
         g.gridx = 0;
@@ -66,7 +72,7 @@ public class DisplayGui extends JFrame implements ActionListener {
         g.insets = new Insets(5,5,0,10);
         add(source, g);
 
-        evolved = new JPanel();
+        evolved = new ImagePanel();
         evolved.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
         evolved.setPreferredSize(new Dimension(200,200));
         g.gridx = 1;
@@ -155,6 +161,70 @@ public class DisplayGui extends JFrame implements ActionListener {
             }
             elapsed.setText(minutes + "m " + seconds + "s");
         }
+
+    }
+
+    class ImagePanel extends JPanel {
+
+        Picture pic;
+        SourceImage image;
+        int width, height;
+
+        public ImagePanel() {
+            this.pic = new Picture();
+            this.width = 200;
+            this.height = 200;
+        }
+
+        public void setup(Picture pic, int width, int height) {
+            this.pic = pic;
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        protected void paintComponent(Graphics s) {        
+            SourceImage img = new SourceImage(width, height);
+            Graphics2D g = img.image.createGraphics();
+
+            super.paintComponent(g);
+
+            int size = pic.polygons.size();
+            for (int i=0; i<size; i++) {
+                jessex.geneticart.engine.Polygon p = pic.polygons.get(i);
+                int n = p.points.size();
+                int[] x = new int[n];
+                int[] y = new int[n];
+                for (jessex.geneticart.engine.Point c : p.points) {
+                    x[i] = c.getX();
+                    y[i] = c.getY();
+                }
+                jessex.geneticart.engine.Paint c = p.color;
+                g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(),
+                        c.getAlpha()));
+                g.fillPolygon(x, y, n);
+            }
+        }
+
+    }
+
+    class SourcePanel extends JPanel {
+
+        private BufferedImage image;
+
+        public SourcePanel(BufferedImage img) {
+            this.image = img;
+        }
+
+        public void setImage(BufferedImage img) {
+            this.image = img;
+        }
+
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.drawImage(this.image, null, 0,0);
+	}
 
     }
 
