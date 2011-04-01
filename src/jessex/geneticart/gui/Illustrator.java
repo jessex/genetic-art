@@ -12,7 +12,8 @@ public class Illustrator {
         SourceImage img = new SourceImage(width, height);
         Graphics2D g = img.image.createGraphics();
 
-        for (int i=0; i<pic.polygons.size(); i++) {
+        int size = pic.polygons.size();
+        for (int i=0; i<size; i++) {
             Polygon p = pic.polygons.get(i);
             int n = p.points.size();
             int[] x = new int[n];
