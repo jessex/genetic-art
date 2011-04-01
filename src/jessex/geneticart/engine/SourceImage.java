@@ -11,6 +11,8 @@ public class SourceImage {
     public int[][][] pixels;
     private int height, width;         //Height and Width of image
 
+    public boolean valid = true;
+
 
     //Creates an empty image buffer to manipulate
     public SourceImage(int width, int height) {
@@ -31,10 +33,11 @@ public class SourceImage {
         this.height = this.image.getHeight();
         this.width = this.image.getWidth();
         
-        if (this.height > Settings.maxHeight || this.width > Settings.maxWidth)
+        if (this.height > Settings.maxHeight || this.width > Settings.maxWidth) {
             System.err.println("Please provide a smaller image: max size is "
                     + Settings.maxWidth + " x " + Settings.maxHeight);
-
+            this.valid = false; //Flag for chooser that image was too large
+        }
         this.pixels = getPixelARGBs(this.image);
     }
 
