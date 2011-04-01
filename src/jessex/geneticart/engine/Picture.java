@@ -30,15 +30,26 @@ public class Picture {
     //Mutation is to add (in a random spot) a new random polygon
     private void addRandomPolygon() {
         if (polygons.size() < Settings.maxPolygons) {
-            polygons.add(Randoms.randomInt(polygons.size()-1), new Polygon());
+            int index;
+            if (polygons.size() > 1)
+                index = Randoms.randomInt(polygons.size()-1);
+            else index = 0;
+            polygons.add(index, new Polygon());
             this.modified = true;
         }
     }
     //Mutation is to move a random polygon to a random "layer" in the image
     private void moveRandomPolygon() {
         if (polygons.size() > 0) {
-            Polygon poly = polygons.remove(Randoms.randomInt(polygons.size()-1));
-            polygons.add(Randoms.randomInt(polygons.size()-1), poly);
+            int index;
+            if (polygons.size() > 1)
+                index = Randoms.randomInt(polygons.size()-1);
+            else index = 0;
+            Polygon poly = polygons.remove(index);
+            if (polygons.size() > 1)
+                index = Randoms.randomInt(polygons.size()-1);
+            else index = 0;
+            polygons.add(index, poly);
             this.modified = true;
         }
     }

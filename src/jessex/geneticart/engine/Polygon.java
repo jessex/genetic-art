@@ -13,12 +13,27 @@ public class Polygon {
         Point origin = new Point();
         //Create polygon by setting up random points around origin
         for (int i=0; i<Settings.minPolyPoints; i++) {
-            int randx = origin.getX() + Randoms.randomInt(-3, 3);
+            int randx = origin.getX() + Randoms.randomInt(0, 6)-3;
             randx = Math.min(Math.max(0, randx), Settings.picWidth);
-            int randy = origin.getY() + Randoms.randomInt(-3, 3);
+            int randy = origin.getY() + Randoms.randomInt(0, 6)-3;
             randy = Math.min(Math.max(0, randy), Settings.picHeight);
             this.points.add(new Point(randx, randy));
         }
+        this.color = new Paint();
+    }
+
+    public int[] getXCoords() {
+        int size = points.size();
+        int[] x = new int[size];
+        for(int i=0; i<size; i++) x[i] = points.get(i).getX();
+        return x;
+    }
+
+    public int[] getYCoords() {
+        int size = points.size();
+        int[] y = new int[size];
+        for(int i=0; i<size; i++) y[i] = points.get(i).getY();
+        return y;
     }
 
 
