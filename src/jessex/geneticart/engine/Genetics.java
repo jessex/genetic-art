@@ -14,6 +14,13 @@ public class Genetics {
     public Picture prevPic;                 //Previous generation Picture
     public Picture currPic;                 //Current generation Picture
 
+    public Genetics(SourceImage s) {
+        prevFitness = currFitness = 0;
+        source = s;
+        evolved = new SourceImage(s.getWidth(), s.getHeight());
+        prevPic = currPic = new Picture();
+    }
+
     /*
      * Calculates the fitness of the evolved image with respect to the source
      * Fitness is a sum of the absolute differences between the color values of
