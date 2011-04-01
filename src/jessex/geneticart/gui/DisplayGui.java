@@ -14,6 +14,7 @@ import jessex.geneticart.engine.*;
 public class DisplayGui extends JFrame implements ActionListener {
 
     Genetics genetics;
+    Thread worker;
 
     SourcePanel source;     //Panel to hold source image
     ImagePanel evolved;     //Panel to hold evolved image
@@ -29,7 +30,7 @@ public class DisplayGui extends JFrame implements ActionListener {
 
     Timer totalTime;
     TimerTask countdown;
-    int seconds, minutes;
+    int seconds, minutes, generations, improvements;
 
     public DisplayGui(SourceImage s) {
         super("Image Evolution");
@@ -37,7 +38,10 @@ public class DisplayGui extends JFrame implements ActionListener {
         DF.setDecimalSeparatorAlwaysShown(true);
 
         createGui(s);
-        seconds = minutes = 0;
+        Settings.picWidth = s.getWidth();
+        Settings.picHeight = s.getHeight();
+        evolved.setup(new Picture(), 200, 200);
+        seconds = minutes = generations = improvements = 0;
         hasStarted = false;
         genetics = new Genetics(s);
     }
@@ -128,8 +132,29 @@ public class DisplayGui extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public void updateEvolved() {
-        
+    public void runMutation() {
+
+        worker = new Thread() {
+
+            public void run() {
+                while (true) {
+                    //evolved.pic.mutatePicture();
+                    boolean improved = genetics.evolveCycle(evolved);
+                    if (improved) {
+                        improvements++;
+                        improv.setText("Improvements: " + improvements);
+                        evolved.setPicture(genetics.prevPic);
+                        evolved.repaint();
+                    }
+                    generations++;
+                    gen.setText("Generations: " + generations);
+                }
+            }
+
+        };
+
+        worker.start();
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -141,12 +166,21 @@ public class DisplayGui extends JFrame implements ActionListener {
                 countdown = new ElapsedTime();
                 totalTime.scheduleAtFixedRate(countdown, 1000, 1000); //Every second
                 start.setText("Pause");
+                //System.out.println(genetics.evolveCycle(evolved));
+                //evolved.pic.mutatePicture();
+                //evolved.pic.mutatePicture();
+                //evolved.pic.mutatePicture();
+                //evolved.pic.mutatePicture();
+                //System.out.println(evolved.pic.polygons.size());
+                //evolved.repaint();
+                runMutation();
             }
             else {
                 isRunning = false;
                 countdown.cancel();
                 totalTime.cancel();
                 start.setText("Start");
+                worker.interrupt();
             }
         }
     }
@@ -164,7 +198,7 @@ public class DisplayGui extends JFrame implements ActionListener {
 
     }
 
-    class ImagePanel extends JPanel {
+    public class ImagePanel extends JPanel {
 
         Picture pic;
         SourceImage image;
@@ -182,23 +216,20 @@ public class DisplayGui extends JFrame implements ActionListener {
             this.height = height;
         }
 
-        @Override
-        protected void paintComponent(Graphics s) {        
-            SourceImage img = new SourceImage(width, height);
-            Graphics2D g = img.image.createGraphics();
+        public void setPicture(Picture pic) {
+            this.pic = pic;
+        }
 
+        @Override
+        public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             int size = pic.polygons.size();
             for (int i=0; i<size; i++) {
                 jessex.geneticart.engine.Polygon p = pic.polygons.get(i);
+                int[] x = p.getXCoords();
+                int[] y = p.getYCoords();
                 int n = p.points.size();
-                int[] x = new int[n];
-                int[] y = new int[n];
-                for (jessex.geneticart.engine.Point c : p.points) {
-                    x[i] = c.getX();
-                    y[i] = c.getY();
-                }
                 jessex.geneticart.engine.Paint c = p.color;
                 g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(),
                         c.getAlpha()));
