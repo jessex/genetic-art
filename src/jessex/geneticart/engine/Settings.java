@@ -25,32 +25,32 @@ public class Settings {
     public static int minPolyPoints = 3;
 
     //MUTATION RATES AND VALUES
-    public static double picAddRate = 0.05;
-    public static double parMax = 0.05;
-    public static double picDelRate = 0.05;
-    public static double pdrMax = 0.05;
-    public static double picMoveRate = 0.05;
-    public static double pmrMax = 0.05;
+    public static double picAddRate = 0.005;
+    public static double parMax = 0.005;
+    public static double picDelRate = 0.005;
+    public static double pdrMax = 0.005;
+    public static double picMoveRate = 0.005;
+    public static double pmrMax = 0.005;
     
-    public static double polyAddRate = 0.05;
-    public static double oarMax = 0.05;
-    public static double polyDelRate = 0.05;
-    public static double odrMax = 0.05;
+    public static double polyAddRate = 0.005;
+    public static double oarMax = 0.005;
+    public static double polyDelRate = 0.005;
+    public static double odrMax = 0.005;
 
-    public static double pointMaxRate = 0.05;
-    public static double marMax = 0.05;
-    public static double pointMidRate = 0.05;
-    public static double mirMax = 0.05;
+    public static double pointMaxRate = 0.005;
+    public static double marMax = 0.005;
+    public static double pointMidRate = 0.005;
+    public static double mirMax = 0.005;
     public static int pointMidIntensity = 20;
-    public static double pointMinRate = 0.05;
-    public static double mnrMax = 0.05;
+    public static double pointMinRate = 0.005;
+    public static double mnrMax = 0.005;
     public static int pointMinIntensity = 5;
 
-    public static double colorAlphaRate = 0.05;
+    public static double colorAlphaRate = 0.005;
     public static int maxColorTransparency = 75;
     public static int minColorTransparency = 25;
-    public static double colorRate = 0.05;
-    public static double crMax = 0.05;
+    public static double colorRate = 0.005;
+    public static double crMax = 0.005;
     public static int colorIntensity = 100;
 
 }
