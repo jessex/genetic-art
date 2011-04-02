@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,9 +39,9 @@ public class DisplayGui extends JFrame implements ActionListener {
         isRunning = false;
         DF.setDecimalSeparatorAlwaysShown(true);
 
-        createGui(s);
         Settings.picWidth = s.getWidth();
         Settings.picHeight = s.getHeight();
+        createGui(s);
         evolved.setup(new Picture(), 200, 200);
         seconds = minutes = generations = improvements = 0;
         hasStarted = false;
@@ -137,13 +139,17 @@ public class DisplayGui extends JFrame implements ActionListener {
         worker = new Thread() {
 
             public void run() {
-                while (true) {
+                while (isRunning) {
                     //evolved.pic.mutatePicture();
+                    //genetics.evolved.image = evolved.getImage();
+                    //genetics.evolved.pixels =
+                    //        genetics.evolved.getPixelARGBs(genetics.evolved.image);
                     boolean improved = genetics.evolveCycle(evolved);
                     if (improved) {
                         improvements++;
                         improv.setText("Improvements: " + improvements);
-                        evolved.setPicture(genetics.prevPic);
+                        evolved.setPicture(genetics.currPic);
+                        //evolved.setImage()
                         evolved.repaint();
                     }
                     generations++;
@@ -166,21 +172,18 @@ public class DisplayGui extends JFrame implements ActionListener {
                 countdown = new ElapsedTime();
                 totalTime.scheduleAtFixedRate(countdown, 1000, 1000); //Every second
                 start.setText("Pause");
-                //System.out.println(genetics.evolveCycle(evolved));
-                //evolved.pic.mutatePicture();
-                //evolved.pic.mutatePicture();
-                //evolved.pic.mutatePicture();
-                //evolved.pic.mutatePicture();
-                //System.out.println(evolved.pic.polygons.size());
-                //evolved.repaint();
                 runMutation();
             }
             else {
                 isRunning = false;
+                try {
+                    worker.join();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(DisplayGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 countdown.cancel();
                 totalTime.cancel();
                 start.setText("Start");
-                worker.interrupt();
             }
         }
     }
@@ -201,7 +204,7 @@ public class DisplayGui extends JFrame implements ActionListener {
     public class ImagePanel extends JPanel {
 
         Picture pic;
-        SourceImage image;
+        private BufferedImage img;
         int width, height;
 
         public ImagePanel() {
@@ -220,21 +223,38 @@ public class DisplayGui extends JFrame implements ActionListener {
             this.pic = pic;
         }
 
+        public void setImage(BufferedImage img) {
+            this.img = img;
+        }
+
+        public BufferedImage getImage() {
+            return this.img;
+        }
+
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
+            Graphics2D g2 = (Graphics2D) g;
+            this.img = (BufferedImage) this.createImage(this.width, this.height);
+            Graphics2D gc = this.img.createGraphics();
+
             int size = pic.polygons.size();
             for (int i=0; i<size; i++) {
-                jessex.geneticart.engine.Polygon p = pic.polygons.get(i);
-                int[] x = p.getXCoords();
-                int[] y = p.getYCoords();
-                int n = p.points.size();
-                jessex.geneticart.engine.Paint c = p.color;
-                g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(),
-                        c.getAlpha()));
-                g.fillPolygon(x, y, n);
+                try {
+                    jessex.geneticart.engine.Polygon p = pic.polygons.get(i);
+                    int[] x = p.getXCoords();
+                    int[] y = p.getYCoords();
+                    int n = p.points.size();
+                    jessex.geneticart.engine.Paint c = p.color;
+                    gc.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(),
+                            c.getAlpha()));
+                    gc.fillPolygon(x, y, n);
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Out of bounds");
+                }
             }
+            g2.drawImage(this.img, null, 0, 0);
         }
 
     }
