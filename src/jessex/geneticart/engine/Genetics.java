@@ -1,8 +1,20 @@
 package jessex.geneticart.engine;
 
+import java.awt.AWTException;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Genetics {
+
+    public static final int MAXFITNESS = (Settings.picWidth *
+            Settings.picHeight) * (255*3 + (Settings.maxColorTransparency -
+            Settings.minColorTransparency));
+    Robot rob;
+
 
     public SourceImage source;              //Source picture to evolve
     public SourceImage evolved;             //"Work in progress" picture
@@ -13,10 +25,15 @@ public class Genetics {
     public Picture currPic;                 //Current generation Picture
 
     public Genetics(SourceImage s) {
-        prevFitness = currFitness = Integer.MAX_VALUE;
+        prevFitness = currFitness = MAXFITNESS;
         source = s;
         evolved = new SourceImage(s.getWidth(), s.getHeight());
         prevPic = currPic = new Picture();
+        try {
+            rob = new Robot();
+        } catch (AWTException ex) {
+            Logger.getLogger(Genetics.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /*
@@ -50,23 +67,40 @@ public class Genetics {
         boolean improved;
 
         //Extract pixels from canvas and place in SourceImage (this.evolved)
-        BufferedImage bi = (BufferedImage) panel.createImage(Settings.maxWidth,
-                Settings.maxHeight);
-        evolved.image = bi;
-        evolved.pixels = evolved.getPixelARGBs(bi);
+        //BufferedImage bi = (BufferedImage) panel.createImage(Settings.maxWidth,
+        //        Settings.maxHeight);
+        //BufferedImage bi = rob.createScreenCapture(panel.getBounds());
+        //evolved.image = bi;
+        //evolved.pixels = evolved.getPixelARGBs(bi);
         
         Picture temp = prevPic;
         prevPic = currPic;
         currPic.setModified(false);
         currPic.mutatePicture();
 
+        //Write mutation to buffer
+        evolved.image = (BufferedImage) panel.createImage(panel.getWidth(),
+                panel.getHeight());
+        Graphics2D gc = evolved.image.createGraphics();
+        int size = currPic.polygons.size();
+        for (int i=0; i<size; i++) {
+            jessex.geneticart.engine.Polygon p = currPic.polygons.get(i);
+            int[] x = p.getXCoords();
+            int[] y = p.getYCoords();
+            jessex.geneticart.engine.Paint c = p.color;
+            gc.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(),
+                    c.getAlpha()));
+            gc.fillPolygon(x, y, p.points.size());
+        }
+        evolved.pixels = evolved.getPixelARGBs(evolved.image);
+
         //Compare fitness of new image to that of last image
         int tempFit = prevFitness;
         prevFitness = currFitness;
         currFitness = getFitness();
-        System.out.println(prevFitness);
-        System.out.println(currFitness);
-        if (currFitness < prevFitness) { //Improvement from previous generation
+        //System.out.println("*"+prevFitness);
+        //System.out.println(currFitness);
+        if (currFitness <= prevFitness) { //Improvement from previous generation
             improved = true;
         }
         else { //No improvement from previous generation
@@ -74,7 +108,6 @@ public class Genetics {
             prevPic = temp;
             currFitness = prevFitness; //Reset fitness level to previous
             prevFitness = tempFit;
-            currPic.mutatePicture();
             improved = false;
         }
 
